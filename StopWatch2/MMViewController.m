@@ -15,7 +15,7 @@
     IBOutlet UIButton *startButton;      //start/stop button
     NSTimer *elapsedTimeTimer;           //Timer to track elapsed time
     double elapsedTime;                  //elapsed time as double
-    int buttonPressed;                   //flag start/stop button
+    BOOL isButtonPressed;                //flag start/stop button
 }
 
 
@@ -32,8 +32,8 @@
 {
     [super viewDidLoad];
     
-    buttonPressed = 0;
-    elapsedTime = 0;    //set elapsed time =0
+    isButtonPressed = NO;
+    elapsedTime = 0;       //set elapsed time to 0
     // custom font use fontbook name
     [elapsedTimeLabel setFont: [UIFont fontWithName:@"FFF Tusj" size: 46.0]];
 }
@@ -73,9 +73,7 @@
     //need start/stop button to update title
     UIButton *sButton = (UIButton*)sender;
     
-    // if start button pressed
-    if(buttonPressed == 0)  {
-       // elapsedTimeLabel.text = @"ON";
+    if(!isButtonPressed)  {
         
         [sButton  setTitle:@"Stop" forState:UIControlStateNormal];
         [sButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
@@ -86,24 +84,19 @@
         else { //start timer
             elapsedTimeTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:sel userInfo:nil repeats:YES];
         }
-        buttonPressed = 1; //toggle button on
+        isButtonPressed = YES; //toggle button on
     }
     else   // stop button
     {
-       // elapsedTimeLabel.text = @"OFF";
-     
         [sButton  setTitle:@"Start" forState:UIControlStateNormal];
         [sButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
         
         [elapsedTimeTimer invalidate];
         elapsedTimeTimer = nil;
-        
-        //elapsedTimeLabel.text = [NSString stringWithFormat:@"%0.2f",elapsedTime];
-        
-        buttonPressed =0;  //toggle button off
+    
+        isButtonPressed = NO;  //toggle button off
     }
     
-
 }
 
 // increment elapsed time and format output label
@@ -143,7 +136,6 @@
    
     elapsedTimeLabel.text = [NSString stringWithFormat:@"%2d:%2d:%2d:%2d",hours, minutes, seconds, tenthsDisplay];
 
-   // elapsedTimeLabel.text = [[elapsedTimeLabel text] stringByAppendingString:@"A"];
    // elapsedTimeLabel.text = [NSString stringWithFormat:@"%0.2f",elapsedTime];
 }
 
@@ -153,13 +145,11 @@
     [startButton setTitle:@"Start" forState:UIControlStateNormal];
     [startButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
 
-    buttonPressed = 0;
+    isButtonPressed = NO;
     elapsedTime = 0;
     [elapsedTimeTimer invalidate];
     elapsedTimeTimer = nil;
     elapsedTimeLabel.text = [NSString stringWithFormat:@"%2d:%2d:%2d:%2d",0, 0, 0, 0];
-    startStopTimer:sender;  
-
 }
 
 - (void)didReceiveMemoryWarning
